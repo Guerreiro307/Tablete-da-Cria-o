@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tablete da Criação</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at top, #5267c4 0%, #1b2637 65%);
+      color: #eef2ff;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 20px;
+    }
+    body.intro-bg {
+      background-image: url('Imagens/Tela Inicial.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    canvas {
+      background: transparent;
+    }
+    .container {
+      width: 100%;
+      max-width: 900px;
+      background: rgba(18, 26, 47, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      padding: 28px;
+      position: relative;
+      z-index: 1;
+      min-height: 600px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2.4rem;
+    }
+    .lead,
+    .scene,
+    .story,
+    .objective,
+    .hint,
+    .graph-note {
+      color: #d8e0ff;
+      line-height: 1.6;
+    }
+    .lead {
+      margin: 16px 0 24px;
+      font-size: 1.05rem;
+      opacity: 0.92;
+    }
+    .scene,
+    .story {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 18px;
+      text-align: left;
+    }
+    .stage-title {
+      font-size: 1.35rem;
+      margin-bottom: 10px;
+      color: #a8c4ff;
+      text-align: left;
+    }
+    .objective {
+      margin-bottom: 18px;
+      font-style: italic;
+    }
+    .challenge-text {
+      color: #ffffff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0px 0px 8px rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .question {
+      font-size: 1.05rem;
+      margin-bottom: 14px;
+      min-height: 66px;
+      text-align: left;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      margin-bottom: 0;
+    }
+    button {
+      width: 100%;
+      padding: 14px 18px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #74b3ff, #3c5ce7);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #91c4ff, #5a74e5);
+    }
+    .status,
+    .footer,
+    .hint {
+      margin: 12px 0 0;
+      font-size: 0.95rem;
+    }
+    .status {
+      min-height: 24px;
+      color: #d9e8ff;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0.85;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: absolute;
+      bottom: 20px;
+      left: 28px;
+      right: 28px;
+      z-index: 2;
+    }
+    .graph-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 18px;
+      z-index: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: var(--graph-margin, 10px);
+    }
+    .graph-header {
+      margin-bottom: 12px;
+      font-size: 1rem;
+      color: #c6d6ff;
+      text-align: left;
+      position: relative;
+      z-index: 1;
+    }
+    canvas {
+      width: 80%;
+      max-width: 500px;
+      border-radius: 14px;
+      background: transparent;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+    .hidden {
+      display: none;
+    }
+    .stage-bg-0 {
+      background-image: url('Imagens/Desafio 1.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      min-height: 600px;
+      --graph-margin: 58px;
+    }
+    .stage-bg-1 {
+      background-image: url('Imagens/Desafio 2.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      min-height: 600px;
+      --graph-margin: 100px;
+    }
+    .stage-bg-2 {
+      background-image: url('Imagens/Desafio 3.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      min-height: 600px;
+      --graph-margin: 90px;
+    }
+    .stage-bg-3 {
+      background-image: url('Imagens/Desafio 4.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      min-height: 600px;
+      --graph-margin: 100px;
+    }
+    .stage-bg-4 {
+      background-image: url('Imagens/Desafio 4.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      min-height: 600px;
+      --graph-margin: 100px;
+    }
+    .game-over {
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      min-height: 600px;
+    }
+    .stage-bg-0::after,
+    .stage-bg-1::after,
+    .stage-bg-2::after,
+    .stage-bg-3::after,
+    .stage-bg-4::after,
+    .game-over::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(18, 26, 47, 0.85);
+      z-index: -2;
+      border-radius: 24px;
+    }
+    #answerContainer {
+      width: 100%;
+      max-width: 900px;
+      margin: 20px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 0 20px;
+      box-sizing: border-box;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #answerContainer.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #answerContainer input {
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+    #answerContainer button {
+      padding: 14px 18px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #74b3ff, #3c5ce7);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+      width: 100%;
+    }
+    #answerContainer button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #91c4ff, #5a74e5);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="introScreen">
+      <h1 id="introTitle">Tablete da Criação</h1>
+      <p class="lead" id="introLead">
+        Você desperta entre as ruínas de uma civilização esquecida. O ar é denso, e o silêncio ecoa entre as pedras.
+      </p>
+      <div class="scene" id="introScene">
+        <p>Em suas mãos, um artefato reage à sua presença: o Tablete da Criação. Um instrumento capaz de moldar o mundo… usando cálculo.</p>
+        <p>Cada estrutura ao seu redor — pedra, energia, vida — obedece a funções. E o tablete permite que você as altere.</p>
+        <p>Mas há um risco. Sempre que você falha, o tablete se torna instável. Você precisará estabilizá-lo antes de tentar novamente.</p>
+        <p>Seu objetivo é claro: levar o Tablete de volta ao seu destino restaurando o equilíbrio do mundo.</p>
+      </div>
+      <button id="startButton">▶ Iniciar Jornada</button>
+    </div>
+
+    <div id="gameScreen" class="hidden">
+      <div class="stage-title" id="stageTitle"></div>
+      <div class="story" id="stageStory"></div>
+      <div class="objective" id="stageObjective"></div>
+      <div class="question" id="question"></div>
+      <div class="status" id="status"></div>
+      <div class="footer">
+        <span id="score"></span>
+        <span class="hint" id="hint"></span>
+      </div>
+
+      <div class="graph-card">
+        <div class="graph-header"></div>
+        <canvas id="graphCanvas" width="680" height="300"></canvas>
+        <div class="graph-note" id="graphNote">A resposta correta aparece em azul; sua resposta aparece em laranja.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="answerContainer">
+    <input type="text" id="answerInput" autocomplete="off" placeholder="Digite sua resposta aqui" />
+    <button id="submitButton">Enviar resposta</button>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
